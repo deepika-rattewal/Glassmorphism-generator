@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Glassmorphism Generator</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-white">
+
+    <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/25 shadow-2xl">
+        
+        <!-- Controls Section -->
+        <div class="space-y-6">
+            <h1 class="text-2xl font-bold tracking-wide">✨ Glassmorphism Generator</h1>
+            <p class="text-sm text-gray-200">Adjust the sliders to customize your frosted glass effect.</p>
+
+            <!-- Blur Slider -->
+            <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                    <label>Blur Intensity</label>
+                    <span id="blurValue">10px</span>
+                </div>
+                <input type="range" id="blurRange" min="0" max="40" value="10" class="w-full accent-purple-400 cursor-pointer">
+            </div>
+
+            <!-- Transparency Slider -->
+            <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                    <label>Transparency</label>
+                    <span id="transparencyValue">0.25</span>
+                </div>
+                <input type="range" id="transparencyRange" min="0.05" max="0.95" step="0.05" value="0.25" class="w-full accent-purple-400 cursor-pointer">
+            </div>
+
+            <!-- Border Radius Slider -->
+            <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                    <label>Border Radius</label>
+                    <span id="radiusValue">16px</span>
+                </div>
+                <input type="range" id="radiusRange" min="0" max="50" value="16" class="w-full accent-purple-400 cursor-pointer">
+            </div>
+
+            <!-- Copy CSS Button -->
+            <button onclick="copyCSS()" id="copyBtn" class="w-full bg-white text-purple-900 font-semibold py-3 rounded-xl hover:bg-purple-100 transition shadow-lg active:scale-95">
+                Copy CSS Code
+            </button>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="relative h-72 flex items-center justify-center overflow-hidden rounded-xl">
+            <!-- Background shapes to show off transparency -->
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-pink-500 rounded-full blur-xl opacity-70"></div>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-yellow-400 rounded-full blur-xl opacity-70"></div>
+
+            <!-- Glass Card Preview -->
+            <div id="previewCard" class="w-64 h-40 flex flex-col items-center justify-center p-6 text-center transition-all duration-150">
+                <p class="font-semibold text-lg">Glass Card</p>
+                <p class="text-xs text-gray-200 mt-1">Look at that frosted background!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        const blurRange = document.getElementById('blurRange');
+        const transparencyRange = document.getElementById('transparencyRange');
+        const radiusRange = document.getElementById('radiusRange');
+
+        const blurValue = document.getElementById('blurValue');
+        const transparencyValue = document.getElementById('transparencyValue');
+        const radiusValue = document.getElementById('radiusValue');
+
+        const previewCard = document.getElementById('previewCard');
+        const copyBtn = document.getElementById('copyBtn');
+
+        function updateGlass() {
+            const blur = blurRange.value;
+            const alpha = transparencyRange.value;
+            const radius = radiusRange.value;
+
+            // Update text labels
+            blurValue.textContent = blur + 'px';
+            transparencyValue.textContent = alpha;
+            radiusValue.textContent = radius + 'px';
+
+            // Apply styles to preview card
+            previewCard.style.backdropFilter = `blur(${blur}px)`;
+            previewCard.style.webkitBackdropFilter = `blur(${blur}px)`;
+            previewCard.style.backgroundColor = `rgba(255, 255, 255, ${alpha})`;
+            previewCard.style.borderRadius = `${radius}px`;
+            previewCard.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+            previewCard.style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.37)';
+        }
+
+        // Event listeners
+        blurRange.addEventListener('input', updateGlass);
+        transparencyRange.addEventListener('input', updateGlass);
+        radiusRange.addEventListener('input', updateGlass);
+
+        // Initial call
+        updateGlass();
+
+        function copyCSS() {
+            const cssCode = `
+background: rgba(255, 255, 255, ${transparencyRange.value});
+backdrop-filter: blur(${blurRange.value}px);
+-webkit-backdrop-filter: blur(${blurRange.value}px);
+border-radius: ${radiusRange.value}px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            `.trim();
+
+            navigator.clipboard.writeText(cssCode);
+            copyBtn.textContent = "Copied to Clipboard! 🎉";
+            setTimeout(() => {
+                copyBtn.textContent = "Copy CSS Code";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
